@@ -1,3 +1,3 @@
 # JarvisProxy
 
-A web proxy that has an integrated browser to use your own Jarvis ai assistant without an extension.
+A proxy website that uses a built in browser and an ai agent to do things for you without needing any extensions or installing anything
