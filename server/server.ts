@@ -1,33 +1,40 @@
 import express, {type Express, type Request, type Response} from "express"
 import cors from "cors"
-const app: Express = express()
+import http from "http"
+import { WebSocketServer, WebSocket } from "ws"
 
-app.use(cors())
-app.use(express.json())
+
 
 const port = 3000
+const app: Express = express()
+const server = http.createServer(app)
+const wss = new WebSocketServer({ server })
 
-type Message = {
+type MessagePayload = {
     Message: string,
     Id: string
 }
 
-let tempMessage: Message | undefined
+app.use(cors())
+app.use(express.json())
 
-app.post('/', (req: Request, res: Response) => {
-    const { Message, Id }: Message = req.body
-    console.log(`Received message: ${Message} with ID: ${Id}`)
-    tempMessage = { Message, Id }
-    res.status(200).json({ message: 'Message received successfully' })
+wss.on('connection', function connection(ws) {
+    console.log('A new client connected!')
+    ws.send('Welcome new client!')
+    ws.on('message', function incoming(message) {
+        console.log(`recieved: ${message}`)
+        ws.send(`Got your message: ${message}`)
+    })
 })
 
-app.get('/', (req: Request, res: Response) => {
-    const message = tempMessage
-        ? `\nmessage: ${tempMessage.Message} with ID: ${tempMessage.Id}`
-        : ''
-    res.send(`Server is running${message}`)
+
+
+
+
+app.get("/", (req: Request, res: Response) => {
+    res.send("Hello World!")
 })
 
-app.listen(port, () => {
-    console.log(`Server is running on ${port}`)
-})
+
+
+server.listen(port, () => console.log(`Listening on port ${port}`))
