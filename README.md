@@ -1,3 +1,3 @@
-# JarvisProxy
+# JarvisBrowser
 
-A proxy website that uses a built in browser and an ai agent to do things for you without needing any extensions or installing anything
+A full chromium experience within a website with an ai assistant that is able to do things for you.
