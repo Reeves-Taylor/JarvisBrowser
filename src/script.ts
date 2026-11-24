@@ -2,7 +2,7 @@ const chatForm = document.getElementById('chatForm')
 const textBox = document.getElementById('message')
 const button = document.getElementById('sendButton')
 
-const socket = new WebSocket('ws://localhost:3000')
+const socket = new WebSocket(`ws://localhost:${window.location.port}`)
 
 if (!(button instanceof HTMLInputElement) || !(textBox instanceof HTMLInputElement) || !(chatForm instanceof HTMLFormElement)) {
     throw new Error('Missing required elements')

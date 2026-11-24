@@ -9,19 +9,19 @@
     "start": "bun run build && bun run start:server",
     "dev": "bun run --watch server/server.ts",
     "dev:client": "bun --watch build src/script.ts --outdir dist/ --minify"
-
   },
   "devDependencies": {
-    "@types/bun": "latest",
-    "@types/cors": "^2.8.19"
+    "@types/bun": "latest"
   },
   "peerDependencies": {
     "typescript": "^5.9.3"
   },
   "dependencies": {
-    "@types/express": "^5.9.3",
+    "@types/argon2": "^0.15.4",
+    "@types/express": "^5.0.6",
     "@types/ws": "^8.18.2",
-    "cors": "^2.8.6",
+    "argon2": "^0.45.2",
+    "argon2id": "^1.0.1",
     "express": "^5.3.0",
     "ws": "^8.23.0"
   }
