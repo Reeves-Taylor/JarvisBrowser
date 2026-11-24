@@ -8,17 +8,21 @@ import * as phash from "./passwordHash.ts"
 const env = process.env
 
 
-if (!env.USERNAME) {
-    console.warn("Missing process.env.USERNAME");
+if (!env.BROWSER_USERNAME) {
+    console.error("Missing process.env.USERNAME");
+    process.exit(1)
 }
 if (!env.PASSWORD_HASH) {
-    console.warn("Missing process.env.PASSWORD_HASH");
+    console.error("Missing process.env.PASSWORD_HASH");
+    process.exit(1)
 }
 if (!env.SECRET) {
-    console.warn("Missing process.env.SECRET");
+    console.error("Missing process.env.SECRET");
+    process.exit(1)
 }
 if (!env.PORT) {
-    console.warn("Missing process.env.PORT");
+    console.error("Missing process.env.PORT");
+    process.exit(1)
 }
 const port = env.PORT || 3000
 const app: Express = express()

@@ -22,5 +22,3 @@ function generateSecret() {
     const token = Buffer.from(bytes).toString("base64url");
     return token
 }
-
-console.log(generateSecret())
