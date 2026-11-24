@@ -25,7 +25,7 @@ function sendMessage(message: string) {
    if (socket.readyState === WebSocket.OPEN) {
     socket.send(message);
   } else {
-    console.warn("WebSocket is not open. Current state:", socket.readyState);
+    console.warn("WebSocket is not open. Current state: ", socket.readyState);
   }
 }
 

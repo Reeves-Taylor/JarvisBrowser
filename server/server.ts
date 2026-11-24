@@ -4,11 +4,13 @@ import http from "http"
 import { WebSocketServer, WebSocket } from "ws"
 
 
-
-const port = 3000
+const port = process.env.PORT || 3000
 const app: Express = express()
 const server = http.createServer(app)
 const wss = new WebSocketServer({ server })
+
+app.use(express.static('public'))
+app.use(express.static('dist'))
 
 type MessagePayload = {
     Message: string,
@@ -32,7 +34,7 @@ wss.on('connection', function connection(ws) {
 
 
 app.get("/", (req: Request, res: Response) => {
-    res.send("Hello World!")
+    res.send("Hello Worldy!")
 })
 
 
