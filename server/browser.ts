@@ -1,20 +1,20 @@
 import puppeteer from "puppeteer"
+import { join } from "node:path"
 
-export var proc: Bun.Subprocess
+export let proc: Bun.Subprocess
 
 export default async function startBrowser() {
-    const path = await puppeteer.executablePath()
-    const file = Bun.file(await path);
+    const exepath = await puppeteer.executablePath()
+    const file = Bun.file(exepath);
 
     if (!(await file.exists())) {
-        throw new Error(`File not found: ${path}`);
-        process.exit(1)
+        throw new Error(`File not found: ${exepath}`);
     }
 
     proc = Bun.spawn([
-        await path,
+        exepath,
         "--remote-debugging-port=9222",
-        `--user-data-dir=${import.meta.dir}/secrets/profile`,
+        `--user-data-dir=${join(import.meta.dir, "..", "secrets", "profile")}`,
         "--no-first-run",
         "--no-default-browser-check",
     ]);

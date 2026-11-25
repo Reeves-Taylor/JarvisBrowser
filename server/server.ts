@@ -1,8 +1,11 @@
 import express, {type Express, type Request, type Response} from "express"
 import http from "http"
 import { WebSocketServer, WebSocket } from "ws"
-import * as passwordHash from "./passwordHash.ts"
+import * as passwordHash from "./passwordHash.ts" // will be used later when logging in is created
 import startBrowser, { proc } from "./browser.ts"
+import * as cdp from "./cdp.ts"
+import { log } from "console"
+
 
 const env = process.env
 
@@ -44,11 +47,21 @@ wss.on('connection', function connection(ws) {
 
 
 async function startup() {
-    server.listen(port, () => console.log(`Listening on port ${port}`))
-    await startBrowser()
+    let url 
+    try {
+        server.listen(port, () => console.log(`Listening on port ${port}`))
+        url = await startBrowser()
+    } catch {
+        console.error("Could not start server or browser")
+        process.exit(1)
+    }
+    return url
 }
 
-startup()
+const WebSocketURL = await startup()
+await cdp.connect(WebSocketURL)
+console.log("CDP connected")
+
 
 const handleShutdown = (signal: number | NodeJS.Signals) => {
     proc.kill(signal);
