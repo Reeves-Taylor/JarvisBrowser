@@ -53,6 +53,7 @@ async function startup() {
         url = await startBrowser()
     } catch {
         console.error("Could not start server or browser")
+        proc.kill(1)
         process.exit(1)
     }
     return url

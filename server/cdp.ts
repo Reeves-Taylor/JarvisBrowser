@@ -1,7 +1,7 @@
 let ws: WebSocket | undefined
 let nextID = 0
 const pending = new Map<number, { resolve: (value: any) => void, reject: (reason: Error) => void }>()
-const listeners = new Map<string, ((params: any) => void)[]>
+const listeners = new Map<string, ((params: any) => void)[]>()
 
 export function connect(url: string): Promise<void> {
     return new Promise((resolve, reject) => {
@@ -31,16 +31,13 @@ export function connect(url: string): Promise<void> {
 
 export function send(method: string, params = {}) {
     if (ws === undefined) {
-        throw new Error("WebSoket undefined.")
+        throw new Error("WebSocket undefined.")
     } if (ws.readyState !== 1) {
         throw new Error("Ready State is not open.")
     }
-    let id = nextID++
+    let id = ++nextID
     return new Promise((resolve, reject) => {
+        pending.set(id, { resolve, reject })
         ws?.send(JSON.stringify({id, method, params}))
     })
-}
-
-export function recieve() {
-
 }
