@@ -26,6 +26,13 @@ export function connect(url: string): Promise<void> {
                 if (handlers) for (const h of handlers) h(msg.params)
             }
         })
+        socket.addEventListener("close", () => {
+            pending.forEach(entry => {
+                entry.reject(new Error("CDP connection closed"))
+            })
+            pending.clear()
+            ws = undefined
+        })
     })
 }
 
@@ -40,4 +47,13 @@ export function send(method: string, params = {}) {
         pending.set(id, { resolve, reject })
         ws?.send(JSON.stringify({id, method, params}))
     })
+}
+
+export function on(method: string, handler: (params: any) => void) {
+    const handlers = listeners.get(method)
+    if (handlers) {
+        handlers.push(handler)
+    } else {
+        listeners.set(method, [handler])
+    }
 }

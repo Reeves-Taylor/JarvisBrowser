@@ -51,17 +51,20 @@ async function startup() {
     try {
         server.listen(port, () => console.log(`Listening on port ${port}`))
         url = await startBrowser()
+        await cdp.connect(WebSocketURL)
+        console.log("CDP connected")
     } catch {
-        console.error("Could not start server or browser")
-        proc.kill(1)
+        console.error("Could not start server, browser, or connection")
+        proc?.kill(1)
         process.exit(1)
     }
     return url
 }
 
 const WebSocketURL = await startup()
-await cdp.connect(WebSocketURL)
-console.log("CDP connected")
+
+await cdp.send("Page.enable")
+await cdp.send("Page.navigate", {url: "https://example.com"})
 
 
 const handleShutdown = (signal: number | NodeJS.Signals) => {
