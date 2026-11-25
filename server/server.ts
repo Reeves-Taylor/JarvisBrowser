@@ -1,15 +1,15 @@
 import express, {type Express, type Request, type Response} from "express"
 import http from "http"
 import { WebSocketServer, WebSocket } from "ws"
-import * as phash from "./passwordHash.ts"
-
-
+import * as passwordHash from "./passwordHash.ts"
+import startBrowser, { proc } from "./browser.ts"
 
 const env = process.env
 
 
+
 if (!env.BROWSER_USERNAME) {
-    console.error("Missing process.env.USERNAME");
+    console.error("Missing process.env.BROWSER_USERNAME");
     process.exit(1)
 }
 if (!env.PASSWORD_HASH) {
@@ -21,8 +21,7 @@ if (!env.SECRET) {
     process.exit(1)
 }
 if (!env.PORT) {
-    console.error("Missing process.env.PORT");
-    process.exit(1)
+    console.warn("Missing process.env.PORT, deafaulting to 3000");
 }
 const port = env.PORT || 3000
 const app: Express = express()
@@ -44,5 +43,17 @@ wss.on('connection', function connection(ws) {
     })
 })
 
+function openChromium() {
+    
+}
 
 server.listen(port, () => console.log(`Listening on port ${port}`))
+startBrowser()
+
+const handleShutdown = (signal: number | NodeJS.Signals) => {
+  // Forward the signal to the child process
+  proc.kill(signal);
+};
+
+process.on("SIGINT", () => handleShutdown("SIGINT"));
+process.on("SIGTERM", () => handleShutdown("SIGTERM"));

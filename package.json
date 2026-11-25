@@ -8,7 +8,7 @@
     "start:server": "bun run server/server.ts",
     "start": "bun run build && bun run start:server",
     "dev": "bun run --watch server/server.ts",
-    "dev:client": "bun --watch build src/script.ts --outdir dist/ --minify"
+    "dev:client": "bun build src/script.ts --outdir dist --watch"
   },
   "devDependencies": {
     "@types/bun": "latest"
@@ -21,6 +21,7 @@
     "@types/express": "^5.0.6",
     "@types/ws": "^8.18.2",
     "express": "^5.3.0",
+    "puppeteer": "^25.18.1",
     "ws": "^8.23.0"
   }
 }
