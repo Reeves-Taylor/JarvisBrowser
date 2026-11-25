@@ -7,7 +7,6 @@ import startBrowser, { proc } from "./browser.ts"
 const env = process.env
 
 
-
 if (!env.BROWSER_USERNAME) {
     console.error("Missing process.env.BROWSER_USERNAME");
     process.exit(1)
@@ -43,16 +42,17 @@ wss.on('connection', function connection(ws) {
     })
 })
 
-function openChromium() {
-    
+
+async function startup() {
+    server.listen(port, () => console.log(`Listening on port ${port}`))
+    await startBrowser()
 }
 
-server.listen(port, () => console.log(`Listening on port ${port}`))
-startBrowser()
+startup()
 
 const handleShutdown = (signal: number | NodeJS.Signals) => {
-  // Forward the signal to the child process
-  proc.kill(signal);
+    proc.kill(signal);
+    process.exit(1)
 };
 
 process.on("SIGINT", () => handleShutdown("SIGINT"));

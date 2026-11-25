@@ -12,7 +12,8 @@
     "dev:client": "bun build src/script.ts --outdir dist --watch"
   },
   "devDependencies": {
-    "@types/bun": "latest"
+    "@types/bun": "latest",
+    "prettier": "^3.10.1"
   },
   "peerDependencies": {
     "typescript": "^5.9.3"
