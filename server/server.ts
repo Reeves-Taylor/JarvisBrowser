@@ -51,10 +51,10 @@ async function startup() {
     try {
         server.listen(port, () => console.log(`Listening on port ${port}`))
         url = await startBrowser()
-        await cdp.connect(WebSocketURL)
+        await cdp.connect(url)
         console.log("CDP connected")
-    } catch {
-        console.error("Could not start server, browser, or connection")
+    } catch (err) {
+        console.error(err)
         proc?.kill(1)
         process.exit(1)
     }
@@ -64,8 +64,22 @@ async function startup() {
 const WebSocketURL = await startup()
 
 await cdp.send("Page.enable")
-await cdp.send("Page.navigate", {url: "https://example.com"})
-
+await cdp.send("Emulation.setDeviceMetricsOverride", {
+    width: 1280,
+    height: 800,
+    deviceScaleFactor: 1,
+    mobile: false,
+})
+cdp.on("Page.screencastFrame", params => {
+    cdp.send("Page.screencastFrameAck", { sessionId: params.sessionId }).catch(() => {})
+    console.log(params.data.length)
+})
+await cdp.send("Page.startScreencast", {
+    format: "jpeg",
+    quality: 60,
+    maxWidth: 1280,
+    maxHeight: 800,
+})
 
 const handleShutdown = (signal: number | NodeJS.Signals) => {
     proc.kill(signal);
