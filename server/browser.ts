@@ -11,7 +11,7 @@ export default async function startBrowser() {
         process.exit(1)
     }
 
-    const proc = Bun.spawn([
+    proc = Bun.spawn([
         await path,
         "--remote-debugging-port=9222",
         `--user-data-dir=${import.meta.dir}/secrets/profile`,
