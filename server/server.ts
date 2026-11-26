@@ -4,7 +4,7 @@ import { WebSocketServer, WebSocket } from "ws"
 import * as passwordHash from "./passwordHash.ts" // will be used later when logging in is created
 import startBrowser, { proc } from "./browser.ts"
 import * as cdp from "./cdp.ts"
-import { log } from "console"
+
 
 
 const env = process.env
@@ -69,9 +69,17 @@ await cdp.send("Emulation.setDeviceMetricsOverride", {
     deviceScaleFactor: 1,
     mobile: false,
 })
+let latestFrame: Buffer
 cdp.on("Page.screencastFrame", params => {
     cdp.send("Page.screencastFrameAck", { sessionId: params.sessionId }).catch(() => {})
-    console.log(params.data.length)
+    latestFrame = Buffer.from(params.data, "base64")
+    wss.clients.forEach((client) => {
+        if(client.readyState != WebSocket.OPEN) {
+            return
+        }
+        client.send(latestFrame)
+
+    })
 })
 await cdp.send("Page.startScreencast", {
     format: "jpeg",
@@ -79,6 +87,7 @@ await cdp.send("Page.startScreencast", {
     maxWidth: 1280,
     maxHeight: 800,
 })
+await cdp.send("Page.navigate", { url: "https://youtube.com"})
 
 const handleShutdown = (signal: number | NodeJS.Signals) => {
     proc.kill(signal);
