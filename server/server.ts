@@ -41,7 +41,6 @@ wss.on('connection', function connection(ws) {
     ws.send('Welcome new client!')
     ws.on('message', function incoming(message) {
         console.log(`recieved: ${message}`)
-        ws.send(`Got your message: ${message}`)
     })
 })
 
