@@ -54,7 +54,7 @@ async function startup() {
         console.log("CDP connected")
     } catch (err) {
         console.error(err)
-        proc?.kill(1)
+        proc?.kill()
         process.exit(1)
     }
     return url
