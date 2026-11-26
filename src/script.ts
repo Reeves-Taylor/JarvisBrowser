@@ -21,6 +21,7 @@ socket.addEventListener('message', async function (e) {
         const blob = new Blob([e.data], {type: "image/jpeg"})
         const bitmap = await createImageBitmap(blob)
         ctx?.drawImage(bitmap, 0, 0)
+        bitmap.close()
     } else {
         console.log(`Message from server: ${e.data}`)
     }
